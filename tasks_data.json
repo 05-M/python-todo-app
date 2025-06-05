@@ -1,0 +1,26 @@
+[
+    {
+        "description": "call my mom",
+        "done": true
+    },
+    {
+        "description": "study python",
+        "done": true
+    },
+    {
+        "description": "go to gym",
+        "done": true
+    },
+    {
+        "description": "play",
+        "done": false
+    },
+    {
+        "description": "cook",
+        "done": false
+    },
+    {
+        "description": "leter",
+        "done": false
+    }
+]

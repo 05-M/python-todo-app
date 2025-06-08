@@ -28,7 +28,7 @@ def view_tasks(tasks_list):
             print(f"{index}. {status_mark} {task_dict['description']}")
 
 def delete_task(tasks_list, filename):
-    if not tasks:
+    if not tasks_list:
         print("No tasks available to delete.")
         return
     else:
@@ -52,7 +52,7 @@ def delete_task(tasks_list, filename):
             save_tasks_to_file(filename, tasks_list)
 
 def edit_task(tasks_list, filename):
-    if not tasks:
+    if not tasks_list:
         print("No tasks available to edit.")
         return            
     else:
@@ -75,7 +75,7 @@ def edit_task(tasks_list, filename):
             save_tasks_to_file(filename, tasks_list)
 
 def mark_task_as_done(tasks_list, filename):
-    if not tasks:
+    if not tasks_list:
         print("No tasks available to mark as done.")
         return
     else:
@@ -88,7 +88,7 @@ def mark_task_as_done(tasks_list, filename):
             print("Invalid input. Please enter a number for the task.")
             return
 
-        if task_number_to_mark_done < 1 or task_number_to_mark_done > len(tasks_list):
+        if (task_number_to_mark_done < 1 or task_number_to_mark_done > len(tasks_list)):
             print("Invalid task number. Please try again.")
             return
         else:
@@ -99,6 +99,45 @@ def mark_task_as_done(tasks_list, filename):
                 tasks_list[index_to_mark]["done"] = True
                 print(f"Task '{tasks_list[index_to_mark]['description']}' marked as done successfully.")
                 save_tasks_to_file(filename, tasks_list)
+                
+def unmark_task_as_done(tasks_list, filename):
+    if not tasks_list:
+        print("No tasks available to unmark as done.")
+        return
+    else:
+        print("Your tasks:")
+        view_tasks(tasks_list)
+        try:
+            task_number_to_unmark_done_str = input("Enter the number of the task you want to unmark as done: ")
+            task_number_to_unmark_done = int(task_number_to_unmark_done_str)
+        except ValueError:
+            print("Invalid input. Please enter a number for the task.")
+            return
+        if (task_number_to_unmark_done < 1 or task_number_to_unmark_done > len(tasks_list)):
+            print("Invalid task number. Please try again.")
+            return
+        else:
+            index_to_unmark = task_number_to_unmark_done - 1
+            if not tasks_list[index_to_unmark]["done"]:
+                print(f"Task '{tasks_list[index_to_unmark]['description']}' is not marked as done.")
+            else:
+                tasks_list[index_to_unmark]["done"] = False
+                print(f"Task '{tasks_list[index_to_unmark]['description']}' unmarked as done successfully.")
+                save_tasks_to_file(filename, tasks_list)
+                
+def clear_completed_tasks(tasks_list, filename):
+    if not tasks_list:
+        print("No tasks available to clear.")
+        return
+    else:
+        original_task_count = len(tasks_list)
+        tasks_list[:] = [task for task in tasks_list if not task["done"]]
+        cleared_task_count = original_task_count - len(tasks_list)
+        if cleared_task_count > 0:
+            print(f"Cleared {cleared_task_count} completed tasks.")
+            save_tasks_to_file(filename, tasks_list)
+        else:
+            print("No completed tasks to clear.")
 
 TASKS_FILENAME = "tasks_data.json"
 tasks = []
@@ -123,7 +162,9 @@ while True:
     print("3.Delete a task")
     print("4.Edit the task")
     print("5.Mark task as done")
-    print("6.Exit")
+    print("6.Unmark task as done")
+    print("7.Clear All completed tasks")
+    print("8.Exit")
     choice = input("Enter your choice: ")
     
     try:
@@ -143,6 +184,10 @@ while True:
     elif choice==5:
         mark_task_as_done(tasks, TASKS_FILENAME)
     elif choice == 6:
+        unmark_task_as_done(tasks, TASKS_FILENAME)
+    elif choice == 7:
+        clear_completed_tasks(tasks, TASKS_FILENAME)
+    elif choice == 8:
         save_tasks_to_file(TASKS_FILENAME, tasks)
         print("Exiting the program.")
         break
